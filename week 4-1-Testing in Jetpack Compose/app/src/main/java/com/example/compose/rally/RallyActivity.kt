@@ -28,6 +28,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.SemanticsPropertyKey
+import androidx.compose.ui.semantics.SemanticsPropertyReceiver
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import com.example.compose.rally.ui.components.RallyTopAppBar
 import com.example.compose.rally.ui.theme.RallyTheme
 
@@ -44,8 +48,11 @@ class RallyActivity : ComponentActivity() {
     }
 }
 
+val CurrentScreenKey = SemanticsPropertyKey<RallyScreen>("CurrentScreen")
+var SemanticsPropertyReceiver.currentScreenProperty by CurrentScreenKey
+
 @Composable
-fun RallyApp() {
+fun RallyApp(modifier: Modifier = Modifier) {
     RallyTheme {
         val allScreens = RallyScreen.values().toList()
         var currentScreen by rememberSaveable { mutableStateOf(RallyScreen.Overview) }
@@ -53,7 +60,13 @@ fun RallyApp() {
             topBar = {
                 RallyTopAppBar(
                     allScreens = allScreens,
-                    onTabSelected = { screen -> currentScreen = screen },
+                    onTabSelected = { screen ->
+                        currentScreen = screen
+                        modifier.semantics {
+                            contentDescription = screen.name
+                            currentScreenProperty = currentScreen
+                        }
+                    },
                     currentScreen = currentScreen
                 )
             }
