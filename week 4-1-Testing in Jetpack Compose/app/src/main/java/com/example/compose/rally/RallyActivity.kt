@@ -30,7 +30,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.SemanticsPropertyKey
 import androidx.compose.ui.semantics.SemanticsPropertyReceiver
-import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import com.example.compose.rally.ui.components.RallyTopAppBar
 import com.example.compose.rally.ui.theme.RallyTheme
@@ -49,20 +48,18 @@ class RallyActivity : ComponentActivity() {
 }
 
 /**
+ * https://developer.android.google.cn/jetpack/compose/testing?hl=ko#custom-semantics-properties
  * https://bryanherbst.com/2020/10/12/compose-semantics-intro/
  */
 val CurrentScreenKey = SemanticsPropertyKey<RallyScreen>("CurrentScreen")
 var SemanticsPropertyReceiver.currentScreenProperty by CurrentScreenKey
 
 @Composable
-fun RallyApp(modifier: Modifier = Modifier) {
+fun RallyApp() {
     RallyTheme {
         val allScreens = RallyScreen.values().toList()
         var currentScreen by rememberSaveable { mutableStateOf(RallyScreen.Overview) }
-        modifier.semantics {
-            currentScreenProperty = currentScreen
-        }
-        Scaffold(
+        Scaffold(modifier = Modifier.semantics { currentScreenProperty = currentScreen },
             topBar = {
                 RallyTopAppBar(
                     allScreens = allScreens,
