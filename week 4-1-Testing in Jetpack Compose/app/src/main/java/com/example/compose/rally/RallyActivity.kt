@@ -48,6 +48,9 @@ class RallyActivity : ComponentActivity() {
     }
 }
 
+/**
+ * https://bryanherbst.com/2020/10/12/compose-semantics-intro/
+ */
 val CurrentScreenKey = SemanticsPropertyKey<RallyScreen>("CurrentScreen")
 var SemanticsPropertyReceiver.currentScreenProperty by CurrentScreenKey
 
@@ -56,16 +59,15 @@ fun RallyApp(modifier: Modifier = Modifier) {
     RallyTheme {
         val allScreens = RallyScreen.values().toList()
         var currentScreen by rememberSaveable { mutableStateOf(RallyScreen.Overview) }
+        modifier.semantics {
+            currentScreenProperty = currentScreen
+        }
         Scaffold(
             topBar = {
                 RallyTopAppBar(
                     allScreens = allScreens,
                     onTabSelected = { screen ->
                         currentScreen = screen
-                        modifier.semantics {
-                            contentDescription = screen.name
-                            currentScreenProperty = currentScreen
-                        }
                     },
                     currentScreen = currentScreen
                 )

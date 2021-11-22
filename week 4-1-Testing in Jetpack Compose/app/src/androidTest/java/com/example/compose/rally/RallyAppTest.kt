@@ -1,7 +1,6 @@
 package com.example.compose.rally
 
 import androidx.compose.ui.test.*
-import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.junit4.createComposeRule
 import com.example.compose.rally.ui.theme.RallyTheme
 import org.junit.Before
@@ -24,10 +23,6 @@ class RallyAppTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    private fun ComposeTestRule.onScreenNode(status: RallyScreen) = onNode(
-        SemanticsMatcher.expectValue(CurrentScreenKey, status)
-    )
-
     @Before
     fun setUp() {
         composeTestRule.setContent {
@@ -40,15 +35,28 @@ class RallyAppTest {
     @Test
     fun rallyAppTest_changeScreen() {
         composeTestRule
-            .onNodeWithText(RallyScreen.Accounts.name)
+            .onNodeWithContentDescription(RallyScreen.Overview.name)
             .assertIsDisplayed()
 
         composeTestRule
-            .onNodeWithText(RallyScreen.Accounts.name)
+            .onNodeWithContentDescription(RallyScreen.Accounts.name)
             .performClick()
 
         composeTestRule
-            .onScreenNode(RallyScreen.Accounts)
-            .assertContentDescriptionEquals(RallyScreen.Accounts.name)
+            .onNodeWithContentDescription(RallyScreen.Overview.name)
+            .assertIsDisplayed()
+
+        composeTestRule
+            .onRoot(useUnmergedTree = true)
+            .printToLog("changeScreen")
+
+        /*
+        java.lang.AssertionError: Failed: assertExists.
+        CertPathValidatorException.Reason: Expected exactly '1' node
+        but could not find any node that satisfies: (CurrentScreen = 'Accounts')
+        */
+        composeTestRule
+            .onNode(SemanticsMatcher.expectValue(CurrentScreenKey, RallyScreen.Accounts))
+            .assertExists()
     }
 }
