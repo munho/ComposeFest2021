@@ -1,5 +1,6 @@
 package com.example.compose.rally
 
+import android.util.Log
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import com.example.compose.rally.ui.theme.RallyTheme
@@ -43,18 +44,13 @@ class RallyAppTest {
             .performClick()
 
         composeTestRule
-            .onNodeWithContentDescription(RallyScreen.Overview.name)
+            .onNodeWithContentDescription(RallyScreen.Accounts.name)
             .assertIsDisplayed()
 
         composeTestRule
             .onRoot(useUnmergedTree = true)
             .printToLog("changeScreen")
 
-        /*
-        java.lang.AssertionError: Failed: assertExists.
-        CertPathValidatorException.Reason: Expected exactly '1' node
-        but could not find any node that satisfies: (CurrentScreen = 'Accounts')
-        */
         composeTestRule
             .onNode(SemanticsMatcher.expectValue(CurrentScreenKey, RallyScreen.Accounts))
             .assertExists()
