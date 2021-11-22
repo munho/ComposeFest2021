@@ -1,6 +1,5 @@
 package com.example.compose.rally
 
-import android.util.Log
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import com.example.compose.rally.ui.theme.RallyTheme
